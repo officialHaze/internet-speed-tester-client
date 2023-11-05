@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import speedTest from "./api/speedTest";
+import checkLatency from "./api/checkLatency";
 
 function App() {
+  const [latency, setLatency] = useState<number>(0);
+
+  useEffect(() => {
+    // Get the latency
+    checkLatency()
+      .then(latency => {
+        setLatency(latency);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
+
+  // Handle the click event
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    speedTest(latency, "test1");
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={handleClick}>Speed test</button>
     </div>
   );
 }
 
 export default App;
+
